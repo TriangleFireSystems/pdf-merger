@@ -1,18 +1,23 @@
 {
-    "name": "clegginabox/pdf-merger",
+    "name": "trianglefiresystems/pdf-merger",
     "description": "PDF File Merger for PHP5",
     "require": {
-        "itbz/fpdi": "dev-master"
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.0"
     },
     "authors": [
         {
             "name": "Paul Clegg",
             "email": "paul@clegginabox.co.uk"
+        },
+        {
+            "name":" Daniel Hope",
+            "email": "dan@trianglefiresystems.co.uk"
         }
     ],
     "autoload": {
-        "classmap": [
-            "src/PDFMerger/PDFMerger.php"
-        ]
+        "psr-4": {
+            "TriangleFireSystems\\PDFMerger\\": "src/"
+        }
     }
 }

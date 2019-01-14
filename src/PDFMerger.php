@@ -13,19 +13,20 @@
  * If you put pages 12-14 before 1-5 then 12-15 will be placed first in the output.
  *
  *
- * Uses FPDI 1.3.1 from Setasign
+ * Uses Fpdi 1.3.1 from Setasign
  * Uses FPDF 1.6 by Olivier Plathey with FPDF_TPL extension 1.1.3 by Setasign
  *
  * Both of these packages are free and open source software, bundled with this class for ease of use.
- * They are not modified in any way. PDFMerger has all the limitations of the FPDI package - essentially, it cannot import dynamic content
+ * They are not modified in any way. PDFMerger has all the limitations of the Fpdi package - essentially, it cannot import dynamic content
  * such as form fields, links or page annotations (anything not a part of the page content stream).
  *
+ * Updated by dan<trianglefiresystems> to use setasign\Fpdi libaries
  */
-namespace Clegginabox\PDFMerger;
+namespace TriangleFireSystems\PDFMerger;
 
 use Exception;
-use fpdi\FPDI;
-use fpdf\FPDF;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdf;
 
 class PDFMerger
 {
@@ -66,7 +67,7 @@ class PDFMerger
             throw new Exception("No PDFs to merge.");
         }
 
-        $fpdi = new FPDI;
+        $fpdi = new Fpdi;
 
         // merger operations
         foreach ($this->_files as $file) {
@@ -82,7 +83,7 @@ class PDFMerger
                     $template   = $fpdi->importPage($i);
                     $size       = $fpdi->getTemplateSize($template);
 
-                    $fpdi->AddPage($fileorientation, array($size['w'], $size['h']));
+                    $fpdi->AddPage($fileorientation, array($size['width'], $size['height']));
                     $fpdi->useTemplate($template);
                 }
             } else {
@@ -111,19 +112,16 @@ class PDFMerger
                 return false;
             }
         }
-
-
     }
 
     /**
-     * FPDI uses single characters for specifying the output location. Change our more descriptive string into proper format.
+     * Fpdi uses single characters for specifying the output location. Change our more descriptive string into proper format.
      * @param $mode
      * @return Character
      */
     private function _switchmode($mode)
     {
-        switch(strtolower($mode))
-        {
+        switch (strtolower($mode)) {
             case 'download':
                 return 'D';
                 break;

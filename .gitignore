@@ -163,3 +163,5 @@ pip-log.txt
 .DS_Store
 
 /vendor/
+
+examples/result.pdf

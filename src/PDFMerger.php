@@ -61,7 +61,7 @@ class PDFMerger
      * @param $orientation
      * @return PDF
      */
-    public function merge($outputmode = 'browser', $outputpath = 'newfile.pdf', $orientation = 'P')
+    public function merge($outputmode = 'browser', $outputpath = 'newfile.pdf', $orientation = 'A')
     {
         if (!isset($this->_files) || !is_array($this->_files)) {
             throw new Exception("No PDFs to merge.");
@@ -79,11 +79,15 @@ class PDFMerger
 
             //add the pages
             if ($filepages == 'all') {
-                for ($i=1; $i<=$count; $i++) {
+                for ($i = 1; $i <= $count; $i++) {
                     $template   = $fpdi->importPage($i);
                     $size       = $fpdi->getTemplateSize($template);
+                    $pageOrientation = ($size['width'] > $size['height']) ? 'L' : 'P';  // Determine orientation for this specific page
 
-                    $fpdi->AddPage($fileorientation, array($size['width'], $size['height']));
+                    if ($fileorientation !== 'A') {  // If an orientation was provided for the whole document, use it
+                        $pageOrientation = $fileorientation;
+                    }
+                    $fpdi->AddPage($pageOrientation, array($size['width'], $size['height']));
                     $fpdi->useTemplate($template);
                 }
             } else {
@@ -92,8 +96,12 @@ class PDFMerger
                         throw new Exception("Could not load page '$page' in PDF '$filename'. Check that the page exists.");
                     }
                     $size = $fpdi->getTemplateSize($template);
+                    $pageOrientation = ($size['width'] > $size['height']) ? 'L' : 'P';  // Determine orientation for this specific page
+                    if ($fileorientation !== 'A') {  // If an orientation was provided for the whole document, use it
+                        $pageOrientation = $fileorientation;
+                    }
 
-                    $fpdi->AddPage($fileorientation, array($size['w'], $size['h']));
+                    $fpdi->AddPage($pageOrientation, array($size['width'], $size['height']));
                     $fpdi->useTemplate($template);
                 }
             }
